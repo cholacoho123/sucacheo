@@ -335,7 +335,7 @@ getgenv().Config = {
         { Name = 'Fall Egg', Amount = 8 },
     },
     PetNeedsPlant = { -- ví dụ: nếu Rooster < 9 thì ưu tiên Rare Egg
-        ['Rooster<5'] = 'Rare Egg',
+        ['Rooster<1'] = 'Rare Egg',
     },
     AutoHatch = true,
     PlaceDelay = 0.25,
