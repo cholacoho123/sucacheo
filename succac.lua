@@ -2303,8 +2303,29 @@ task.spawn(function()
 end)
 local player = game.Players.LocalPlayer
 
--- 🔧 Hàm xoá visual an toàn, giữ lại PrimaryPart
+-- 📜 Danh sách cây/quả Evo cần giữ nguyên
+local KeepEvo = {
+    ['Evo Beetroot I'] = true,
+    ['Evo Blueberry I'] = true,
+    ['Evo Pumpkin I'] = true,
+    ['Evo Mushroom I'] = true,
+    ['Evo Beetroot II'] = true,
+    ['Evo Blueberry II'] = true,
+    ['Evo Pumpkin II'] = true,
+    ['Evo Mushroom II'] = true,
+    ['Evo Beetroot III'] = true,
+    ['Evo Blueberry III'] = true,
+    ['Evo Pumpkin III'] = true,
+    ['Evo Mushroom III'] = true,
+}
+
+-- 🔧 Hàm xoá visual an toàn, giữ lại PrimaryPart và cây Evo
 local function clearPlantAndFruits(plant)
+    if KeepEvo[plant.Name] then
+        -- ✅ Nếu là cây Evo → giữ nguyên cả model + quả
+        return
+    end
+
     for _, obj in ipairs(plant:GetChildren()) do
         if tonumber(obj.Name) and obj.Name ~= 'PrimaryPart' then
             warn('Xóa part cây:', obj:GetFullName())
@@ -2312,6 +2333,10 @@ local function clearPlantAndFruits(plant)
         end
         if obj.Name == 'Fruits' then
             for _, fruit in ipairs(obj:GetChildren()) do
+                if KeepEvo[fruit.Name] then
+                    -- ✅ Nếu là quả Evo → giữ nguyên
+                    continue
+                end
                 for _, fchild in ipairs(fruit:GetChildren()) do
                     if
                         tonumber(fchild.Name)
@@ -2363,7 +2388,8 @@ spawn(function()
                             and subFarm.Important.Data:FindFirstChild('Owner')
                         then
                             local isMine = (
-                                subFarm.Important.Data.Owner.Value == player.Name
+                                subFarm.Important.Data.Owner.Value
+                                == player.Name
                             )
 
                             -- ❌ Xoá farm người khác
