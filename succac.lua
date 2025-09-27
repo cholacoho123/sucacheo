@@ -466,6 +466,7 @@ getgenv().Config = {
             'Levelup Lollipop',
         },
         Eggs = {
+			'Bee Egg',
             ['Common Egg'] = 5,
             ['Uncommon Egg'] = 10,
             'Rare Egg',
