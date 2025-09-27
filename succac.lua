@@ -2465,3 +2465,79 @@ spawn(function()
         end)
     end
 end)
+-- 🔧 Services
+local Players     = game:GetService("Players")
+local RS          = game:GetService("ReplicatedStorage")
+local localPlayer = Players.LocalPlayer
+
+local BuyNormal   = RS.GameEvents:WaitForChild("BuyTravelingMerchantShopStock")
+local BuyHoney    = RS.GameEvents:WaitForChild("HoneyMerchantSubmit_RE")
+
+-- 📜 Danh sách item cố định
+local normalShopItems = {
+    "Liberty Lily","Firework Flower","Firework","Bald Eagle","July 4th Crate",
+
+    "Common Gnome Crate","Farmers Gnome Crate","Classic Gnome Crate",
+    "Iconic Gnome Crate","Gnome",
+
+    "Night Staff","Star Caller",
+    "Mutation Spray Cloudtouched","Mutation Spray Wet",
+    "Mutation Spray Windstruck","Mutation Spray Verdant",
+
+    "Tropical Mist Sprinkler","Berry Blusher Sprinkler",
+    "Spice Spritzer Sprinkler","Sweet Soaker Sprinkler",
+    "Flower Froster Sprinkler","Stalk Sprout Sprinkler",
+
+    "Cauliflower","Rafflesia","Green Apple","Avocado","Banana","Pineapple",
+    "Kiwi","Bell Pepper","Prickly Pear","Loquat","Feijoa","Pitcher Plant",
+
+    "Common Summer Egg","Rare Summer Egg","Paradise Egg",
+}
+
+local honeyShopItems = {
+    "Bee Egg",
+}
+
+local CHECK_DELAY = 5 -- giây
+
+-- 📦 Đếm số lượng item trong balo
+local function countInBackpack(itemName)
+    local count = 0
+    for _, obj in ipairs(localPlayer.Backpack:GetChildren()) do
+        if string.find(obj.Name, itemName) then
+            count += 1
+        end
+    end
+    for _, obj in ipairs(localPlayer.Character:GetChildren()) do
+        if string.find(obj.Name, itemName) then
+            count += 1
+        end
+    end
+    return count
+end
+
+-- 🛒 Mua item bằng tiền thường
+local function buyNormal(itemName)
+    local current = countInBackpack(itemName)
+    BuyNormal:FireServer(itemName)
+    print("💰 Mua "..itemName.." | hiện có: "..current)
+end
+
+-- 🍯 Mua item bằng Honey
+local function buyHoney(itemName)
+    local current = countInBackpack(itemName)
+    BuyHoney:FireServer(itemName)
+    print("🍯 Mua "..itemName.." | hiện có: "..current)
+end
+
+-- 🚀 Main loop
+task.spawn(function()
+    while task.wait(CHECK_DELAY) do
+        for _, item in ipairs(normalShopItems) do
+            buyNormal(item)
+        end
+        for _, item in ipairs(honeyShopItems) do
+            buyHoney(item)
+        end
+    end
+end)
