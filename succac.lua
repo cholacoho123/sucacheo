@@ -354,9 +354,6 @@ getgenv().Config = {
         'Luminous Sprite',
         'Phoenix',
         'Cockatrice',
-        'Drake',
-        'Gnome',
-        'Green Bean',
         'Apple Gazelle',
         'Lemon Lion',
         'Peach Wasp',
@@ -376,6 +373,11 @@ getgenv().Config = {
         ['Brown Mouse'] = 5,
         ['Squirrel'] = 5,
         ['Grey Mouse'] = 5,
+        'Bee',
+		'Honey Bee',
+		'Petal Bee',
+		'Wasp',
+		'Tarantula Hawk',
         'Bear Bee',
         'T-Rex',
         'Brontosaurus',
@@ -394,10 +396,10 @@ getgenv().Config = {
     WeightLimit = 5, -- kg
 
     -- Cho pet ăn
-    HungerThreshold = 0.1, -- dưới ngưỡng này sẽ cho ăn
+    HungerThreshold = 0, -- dưới ngưỡng này sẽ cho ăn
 
     -- Equip pet
-    PetUpLv = { ['Starfish'] = 2, ['Brown Mouse'] = 2, ['Grey Mouse'] = 2 },
+    PetUpLv = { ['Rooster'] = 5, ['Starfish'] = 2, ['Brown Mouse'] = 2, ['Grey Mouse'] = 2 },
     PetPrioritize = { ['Sunny-Side Chicken'] = 5, ['Tarantula Hawk'] = 2, ['Wasp'] = 2 },
     PetRandom = { ['Rooster'] = 5 },
 
@@ -444,7 +446,7 @@ getgenv().Config = {
             ['Romanesco'] = 10,
         },
         Gears = {
-            'Watering Can'
+            'Watering Can',
             'Trading Ticket',
             ['Trowel'] = 200,
             'Basic Sprinkler',
