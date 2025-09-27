@@ -824,9 +824,9 @@ function DoPlanting()
                 )
                 for i = 1, need do
                     teleportToCenter(myFarm)
-                    task.wait(0.5)
+                    task.wait(1)
                     plantSeedAt(midPlot.Position, seedName)
-                    task.wait(0.5)
+                    task.wait(1)
                 end
             end
         else
@@ -904,7 +904,7 @@ end
 -- ===============================
 -- 🌾 HARVEST FRUITS (from thu hoach trai bằng model) - single pass
 -- ===============================
-local YIELD_LIMIT = 200
+local YIELD_LIMIT = 100
 local HARVEST_DELAY = 0.5
 
 local function shouldSkipFruitModel(fruit)
@@ -2111,69 +2111,74 @@ task.spawn(function()
         print('===== ✅ Kết thúc vòng farm =====')
     end
 end)
-local Players2 = game:GetService('Players')
-local Rep2 = game:GetService('ReplicatedStorage')
-local CollectionService2 = game:GetService('CollectionService')
+-- ===============================
+-- 🛒 AUTO BUY EVENT SHOP (gốc, cố định Evo Seeds)
+-- ===============================
+local RS = game:GetService('ReplicatedStorage')
+local BuyEventShop = RS.GameEvents:FindFirstChild('BuyEventShopStock')
 
-local localPlayer2 = Players2.LocalPlayer
-local CollectRemote2 = Rep2.GameEvents.Crops.Collect
-local SubmitAllRemote2 = Rep2.GameEvents.FallMarketEvent.SubmitAllPlants
+local function DoBuyShopEvent()
+    if not BuyEventShop then
+        warn('❌ Không tìm thấy remote BuyEventShopStock')
+        return
+    end
 
--- ⚙️ Delay và quét
-local USE_FARM_ONLY2 = true
-local FIRE_DELAY2 = 20
-local INTERVAL2 = 60 -- tăng delay để tránh spam
+    -- danh sách cố định
+    BuyEventShop:FireServer('Evo Beetroot I', 5)
+    BuyEventShop:FireServer('Evo Blueberry I', 5)
+    BuyEventShop:FireServer('Evo Pumpkin I', 5)
+    BuyEventShop:FireServer('Evo Mushroom I', 5)
 
--- 📂 Farm folder
-local farmFolder2
-pcall(function()
-    if
-        workspace:FindFirstChild('Farm')
-        and workspace.Farm:FindFirstChild('Farm')
-    then
-        farmFolder2 = workspace.Farm.Farm
+    print('✅ Đã gửi request mua tất cả Evo Seeds')
+end
+
+-- 🔄 Auto loop mỗi 60 giây
+task.spawn(function()
+    while task.wait(60) do
+        DoBuyShopEvent()
     end
 end)
 
--- 🏷️ Các loại cây cần thu hoạch
-local targetCrops2 = {
-    ['Mushroom'] = true,
-    ['Glowthorn'] = true,
-    ['Pepper'] = true,
-    ['Cacao'] = true,
-    ['Apple'] = true,
-    ['Wispwing'] = true,
-    ['Romanesco'] = true,
-    ['Elder Strawberry'] = true,
-    ['Burning Bud'] = true,
-    ['Giant Pinecone'] = true,
-    ['Corn'] = true,
-    ['Sugar Apple'] = true,
-    ['Ember Lily'] = true,
-    ['Dragon Fruit'] = true,
-    ['Sunbulb'] = true,
-    ['Orange Tulip'] = true,
-    ['Mango'] = true,
-    ['Cactus'] = true,
-    ['Beanstalk'] = true,
-    ['Lightshoot'] = true,
-    ['Grape'] = true,
-    ['Daffodil'] = true,
-    ['Aurora Vine'] = true,
-    ['Grand Tomato'] = true,
-    ['Maple Apple'] = true,
-    ['Princess Thorn'] = true,
-    ['Spiked Mango'] = true,
-    ['Pineapple'] = true,
-    ['King Cabbage'] = true,
-    ['Carnival Pumpkin'] = true,
-    ['Kniphofia'] = true,
-    ['Golden Peach'] = true,
-    ['Maple Resin'] = true,
-}
+-- ===============================
+-- 🌟 FIXED SETTINGS (không cần config)
+-- ===============================
+local Players = game:GetService('Players')
+local Rep = game:GetService('ReplicatedStorage')
+local ColServ = game:GetService('CollectionService')
+local localPlayer = Players.LocalPlayer
+local CollectRemote = Rep.GameEvents.Crops.Collect
+local SubmitRemote = Rep.GameEvents.TieredPlants.Submit
 
--- 🏷️ Kiểm tra tag thu hoạch
-local function hasCollectTag2(obj)
+local INTERVAL = 50 -- giãn cách check thu hoạch (giây)
+local FIRE_DELAY = 0.25 -- delay giữa mỗi lần FireServer
+local LIMIT = 200 -- số crop tối đa mỗi vòng
+local DEBUG = true -- in log
+
+-- ===============================
+-- 🔎 Tìm farm
+-- ===============================
+local function getMyFarm()
+    for _, farm in ipairs(workspace:GetChildren()) do
+        if farm.Name == 'Farm' then
+            for _, subFarm in ipairs(farm:GetChildren()) do
+                if
+                    subFarm.Name == 'Farm'
+                    and subFarm:FindFirstChild('Important')
+                    and subFarm.Important:FindFirstChild('Data')
+                    and subFarm.Important.Data:FindFirstChild('Owner')
+                    and subFarm.Important.Data.Owner.Value
+                        == localPlayer.Name
+                then
+                    return subFarm
+                end
+            end
+        end
+    end
+    return nil
+end
+
+-- 🔍 Check tag collect
+local function hasCollectTag(obj)
     if type(obj.HasTag) == 'function' then
         local ok, res = pcall(function()
             return obj:HasTag('CollectPrompt')
@@ -2182,33 +2187,93 @@ local function hasCollectTag2(obj)
             return res
         end
     end
-    return CollectionService2:HasTag(obj, 'CollectPrompt')
+    return ColServ:HasTag(obj, 'CollectPrompt')
 end
 
--- 🌱 Thu hoạch và nộp ngay sau mỗi lần
-local function harvestAndSubmit2()
-    local descendants = USE_FARM_ONLY2 and farmFolder2:GetDescendants()
-        or workspace:GetDescendants()
+-- 📜 Danh sách trái Evo hợp lệ
+local evoFruits = {
+    'Evo Beetroot I',
+    'Evo Blueberry I',
+    'Evo Pumpkin I',
+    'Evo Mushroom I',
+    'Evo Beetroot II',
+    'Evo Blueberry II',
+    'Evo Pumpkin II',
+    'Evo Mushroom II',
+    'Evo Beetroot III',
+    'Evo Blueberry III',
+    'Evo Pumpkin III',
+    'Evo Mushroom III',
+}
 
-    for _, inst in ipairs(descendants) do
-        if inst:IsA('ProximityPrompt') and hasCollectTag2(inst) then
+local function isEvoFruit(name)
+    for _, fname in ipairs(evoFruits) do
+        if string.find(name, fname) then
+            return true
+        end
+    end
+    return false
+end
+
+-- 🌻 Thu hoạch cây Evo
+local function harvestEvo(limit)
+    local collected = 0
+    local myFarm = getMyFarm()
+    if not myFarm then
+        warn('❌ Không tìm thấy farm của bạn!')
+        return
+    end
+
+    for _, inst in ipairs(myFarm:GetDescendants()) do
+        if inst:IsA('ProximityPrompt') and hasCollectTag(inst) then
             local crop = inst.Parent and inst.Parent.Parent
-            if crop and targetCrops2[crop.Name] then
-                CollectRemote2:FireServer({ crop })
-                task.wait(FIRE_DELAY2)
-
-                SubmitAllRemote2:FireServer()
+            if crop and isEvoFruit(crop.Name) then
+                CollectRemote:FireServer({ crop })
+                if DEBUG then
+                    print('✅ Thu hoạch:', crop.Name)
+                end
+                collected += 1
+                task.wait(FIRE_DELAY)
+                if collected >= limit then
+                    return
+                end
+            else
+                if DEBUG and crop then
+                    print('⏭️ Bỏ qua:', crop.Name)
+                end
             end
         end
     end
 end
 
--- 🔄 Loop Farm
-task.spawn(function()
-    while task.wait(INTERVAL2) do
-        harvestAndSubmit2()
+-- 🧰 Equip đúng fruit có b=j
+local function equipCorrectFruit()
+    -- đang cầm
+    for _, tool in ipairs(localPlayer.Character:GetChildren()) do
+        if tool:IsA('Tool') and isEvoFruit(tool.Name) then
+            local attrs = tool:GetAttributes()
+            if attrs and attrs.b == 'j' then
+                return tool
+            end
+        end
     end
-end)
+    -- trong backpack
+    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
+        if tool:IsA('Tool') and isEvoFruit(tool.Name) then
+            local attrs = tool:GetAttributes()
+            if attrs and attrs.b == 'j' then
+                tool.Parent = localPlayer.Character
+                if DEBUG then
+                    print('📦 Auto cầm:', tool.Name)
+                end
+                return tool
+            end
+        end
+    end
+    return nil
+end
+
+-- 🧾 Nộp fruit
 local player = game.Players.LocalPlayer
 
 -- 🔧 Hàm xoá visual an toàn, giữ lại PrimaryPart
@@ -2234,7 +2299,7 @@ local function clearPlantAndFruits(plant)
     end
 end
 
--- 🚀 Vòng lặp chính (luôn chạy xoá)
+-- 🚀 Vòng lặp chính
 spawn(function()
     while task.wait(2) do
         pcall(function()
@@ -2261,7 +2326,7 @@ spawn(function()
             end
 
             -- 🔄 Clear Farms
-            for _, farm in ipairs(workspace:GetChildren()) do
+            for _, farm in workspace:GetChildren() do
                 if farm.Name == 'Farm' then
                     for _, subFarm in ipairs(farm:GetChildren()) do
                         if
@@ -2271,8 +2336,7 @@ spawn(function()
                             and subFarm.Important.Data:FindFirstChild('Owner')
                         then
                             local isMine = (
-                                subFarm.Important.Data.Owner.Value
-                                == player.Name
+                                subFarm.Important.Data.Owner.Value == player.Name
                             )
 
                             -- ❌ Xoá farm người khác
@@ -2281,7 +2345,7 @@ spawn(function()
                                 subFarm:Destroy()
                             end
 
-                            -- ✅ Farm của mình: xóa Plants, Decorations, Fences, Cosmetics
+                            -- ✅ Farm của mình
                             if isMine then
                                 if
                                     subFarm.Important:FindFirstChild(
@@ -2296,25 +2360,47 @@ spawn(function()
                                         clearPlantAndFruits(plant)
                                     end
                                 end
-                                for _, folderName in ipairs({
-                                    'Decorations',
-                                    'Fences',
-                                    'Cosmetics',
-                                }) do
-                                    local folder =
-                                        subFarm.Important:FindFirstChild(
-                                            folderName
+
+                                if
+                                    subFarm.Important:FindFirstChild(
+                                        'Decorations'
+                                    )
+                                then
+                                    for _, obj in
+                                        ipairs(
+                                            subFarm.Important.Decorations:GetChildren()
                                         )
-                                    if folder then
-                                        for _, obj in
-                                            ipairs(folder:GetChildren())
-                                        do
-                                            warn(
-                                                'Xóa ' .. folderName .. ':',
-                                                obj.Name
-                                            )
-                                            obj:Destroy()
-                                        end
+                                    do
+                                        warn('Xóa deco:', obj.Name)
+                                        obj:Destroy()
+                                    end
+                                end
+
+                                if
+                                    subFarm.Important:FindFirstChild('Fences')
+                                then
+                                    for _, obj in
+                                        ipairs(
+                                            subFarm.Important.Fences:GetChildren()
+                                        )
+                                    do
+                                        warn('Xóa fence:', obj.Name)
+                                        obj:Destroy()
+                                    end
+                                end
+
+                                if
+                                    subFarm.Important:FindFirstChild(
+                                        'Cosmetics'
+                                    )
+                                then
+                                    for _, obj in
+                                        ipairs(
+                                            subFarm.Important.Cosmetics:GetChildren()
+                                        )
+                                    do
+                                        warn('Xóa cosmetic:', obj.Name)
+                                        obj:Destroy()
                                     end
                                 end
                             end
@@ -2323,111 +2409,5 @@ spawn(function()
                 end
             end
         end)
-    end
-end)
--- ===============================
--- 🛒 AUTO BUY EVENT SHOP (gốc, không config)
--- ===============================
-local RS = game:GetService('ReplicatedStorage')
-local BuyEventShop = RS.GameEvents:FindFirstChild('BuyEventShopStock')
-
-local function DoBuyShopEvent()
-    if not BuyEventShop then
-        warn('❌ Không tìm thấy remote BuyEventShopStock')
-        return
-    end
-
-    -- danh sách cố định
-    BuyEventShop:FireServer('Evo Beetroot I', 5)
-    BuyEventShop:FireServer('Evo Blueberry I', 5)
-    BuyEventShop:FireServer('Evo Pumpkin I', 5)
-    BuyEventShop:FireServer('Evo Mushroom I', 5)
-
-    warn('✅ Đã gửi request mua tất cả Evo items')
-end
-
--- 🔄 Auto loop mỗi 60 giây
-task.spawn(function()
-    while task.wait(10) do
-        DoBuyShopEvent()
-    end
-end)
--- 🌟 Auto Equip & Submit Evo Fruits với filter Attributes
-local Players = game:GetService('Players')
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local localPlayer = Players.LocalPlayer
-
--- 📜 Danh sách trái hợp lệ
-local evoFruits = {
-    'Evo Beetroot I',
-    'Evo Blueberry I',
-    'Evo Pumpkin I',
-    'Evo Mushroom I',
-    'Evo Beetroot II',
-    'Evo Blueberry II',
-    'Evo Pumpkin II',
-    'Evo Mushroom II',
-    'Evo Beetroot III',
-    'Evo Blueberry III',
-    'Evo Pumpkin III',
-    'Evo Mushroom III',
-}
-
--- 🧰 Check có phải trái trong list
-local function isEvoFruit(name)
-    for _, fruitName in ipairs(evoFruits) do
-        if string.find(name, fruitName) then
-            return true
-        end
-    end
-    return false
-end
-
--- 🧰 Hàm tìm & equip đúng trái có b = "j"
-local function equipCorrectFruit()
-    -- Nếu đang cầm
-    for _, tool in ipairs(localPlayer.Character:GetChildren()) do
-        if tool:IsA('Tool') and isEvoFruit(tool.Name) then
-            local attrs = tool:GetAttributes()
-            if attrs and attrs.b == 'j' then
-                return tool
-            end
-        end
-    end
-
-    -- Nếu trong backpack
-    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
-        if tool:IsA('Tool') and isEvoFruit(tool.Name) then
-            local attrs = tool:GetAttributes()
-            if attrs and attrs.b == 'j' then
-                tool.Parent = localPlayer.Character
-                print('📦 Auto cầm đúng trái có b=j:', tool.Name)
-                return tool
-            end
-        end
-    end
-
-    return nil
-end
-
--- 🧾 Hàm nộp
-local function submitFruit(tool)
-    if tool and tool:IsA('Tool') then
-        local args = { 'Held' }
-        ReplicatedStorage.GameEvents.TieredPlants.Submit:FireServer(
-            unpack(args)
-        )
-        print('✅ Đã nộp:', tool.Name)
-    end
-end
-
--- 🔄 Vòng lặp
-task.spawn(function()
-    while task.wait(1) do
-        local fruit = equipCorrectFruit()
-        if fruit then
-            task.wait(0.3)
-            submitFruit(fruit)
-        end
     end
 end)
