@@ -2149,7 +2149,7 @@ local localPlayer = Players.LocalPlayer
 local CollectRemote = Rep.GameEvents.Crops.Collect
 local SubmitRemote = Rep.GameEvents.TieredPlants.Submit
 
-local INTERVAL = 50 -- giãn cách check thu hoạch (giây)
+local INTERVAL = 10 -- giãn cách check thu hoạch (giây)
 local FIRE_DELAY = 0.25 -- delay giữa mỗi lần FireServer
 local LIMIT = 200 -- số crop tối đa mỗi vòng
 local DEBUG = true -- in log
@@ -2274,6 +2274,33 @@ local function equipCorrectFruit()
 end
 
 -- 🧾 Nộp fruit
+local function submitFruit(tool)
+    if tool and tool:IsA('Tool') then
+        SubmitRemote:FireServer('Held')
+        if DEBUG then
+            print('✅ Đã nộp:', tool.Name)
+        end
+    end
+end
+
+-- ===============================
+-- 🚀 Main loops
+-- ===============================
+task.spawn(function()
+    while task.wait(INTERVAL) do
+        harvestEvo(LIMIT)
+    end
+end)
+
+task.spawn(function()
+    while task.wait(1) do
+        local fruit = equipCorrectFruit()
+        if fruit then
+            task.wait(0.5)
+            submitFruit(fruit)
+        end
+    end
+end)
 local player = game.Players.LocalPlayer
 
 -- 🔧 Hàm xoá visual an toàn, giữ lại PrimaryPart
