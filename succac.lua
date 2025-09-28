@@ -332,7 +332,6 @@ getgenv().Config = {
     EggsPlant = {
         { Name = 'Jungle Egg', Amount = 8 },
         { Name = 'Bug Egg', Amount = 2 },
-        { Name = 'Fall Egg', Amount = 1 },
     },
     PetNeedsPlant = { -- ví dụ: nếu Rooster < 9 thì ưu tiên Rare Egg
         ['Rooster<1'] = 'Rare Egg',
