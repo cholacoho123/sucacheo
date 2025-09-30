@@ -245,75 +245,75 @@ getgenv().RunningFarm = true
 -- 🌟 CONFIG CHUNG (bạn chỉnh tại đây)
 -- ===============================
 getgenv().Config = {
-    LoopInterval = 12, -- giây: mỗi vòng lặp tổng
+    LoopInterval = 0.1, -- giây: mỗi vòng lặp tổng
 
     -- Trồng cây
     Plant_Seeds = { -- target số lượng cây trong farm
-        ['Evo Beetroot I'] = 50,
-        ['Evo Blueberry I'] = 50,
-        ['Evo Pumpkin I'] = 50,
-        ['Evo Mushroom I'] = 50,
+        ['Evo Beetroot I'] = 30,
+        ['Evo Blueberry I'] = 30,
+        ['Evo Pumpkin I'] = 30,
+        ['Evo Mushroom I'] = 30,
 
-        ['Evo Beetroot II'] = 50,
-        ['Evo Blueberry II'] = 50,
-        ['Evo Pumpkin II'] = 50,
-        ['Evo Mushroom II'] = 50,
+        ['Evo Beetroot II'] = 30,
+        ['Evo Blueberry II'] = 30,
+        ['Evo Pumpkin II'] = 30,
+        ['Evo Mushroom II'] = 30,
 
-        ['Evo Beetroot III'] = 50,
-        ['Evo Blueberry III'] = 50,
-        ['Evo Pumpkin III'] = 50,
-        ['Evo Mushroom III'] = 50,
-        ['Carrot'] = 4,
-        ['Turnip'] = 4,
-        ['Parsley'] = 4,
-        ['Meyer Lemon'] = 4,
-        ['Carnival Pumpkin'] = 4,
-        ['Kniphofia'] = 4,
-        ['Golden Peach'] = 4,
-        ['Maple Resin'] = 4,
-        ['Moon Blossom'] = 4,
-        ['Bone Blossom'] = 4,
-        ['Moon Melon'] = 4,
-        ['Maple Apple'] = 4,
-        ['Moon Mango'] = 4,
-        ['Dragon Pepper'] = 4,
-        ['Elephant Ears'] = 4,
-        ['Fossilight'] = 4,
-        ['Princess Thorn'] = 4,
-        ['Coconut'] = 4,
-        ['Mushroom'] = 4,
-        ['Glowthorn'] = 4,
-        ['Pepper'] = 4,
-        ['Cacao'] = 4,
-        ['Apple'] = 4,
-        ['Wispwing'] = 4,
-        ['Romanesco'] = 4,
-        ['Elder Strawberry'] = 4,
-        ['Burning Bud'] = 4,
-        ['Giant Pinecone'] = 4,
-        ['Corn'] = 4,
-        ['Sugar Apple'] = 4,
-        ['Ember Lily'] = 4,
-        ['Dragon Fruit'] = 4,
-        ['Sunbulb'] = 4,
-        ['Orange Tulip'] = 4,
-        ['Mango'] = 4,
-        ['Cactus'] = 4,
-        ['Beanstalk'] = 4,
-        ['Lightshoot'] = 4,
-        ['Grape'] = 4,
-        ['Daffodil'] = 4,
-        ['Aurora Vine'] = 4,
-        ['Grand Tomato'] = 4,
-        ['Maple Apple'] = 4,
-        ['Princess Thorn'] = 4,
-        ['Spiked Mango'] = 4,
-        ['Pineapple'] = 4,
-        ['King Cabbage'] = 4,
-        ['Carnival Pumpkin'] = 4,
-        ['Kniphofia'] = 4,
-        ['Golden Peach'] = 4,
-        ['Maple Resin'] = 4,
+        ['Evo Beetroot III'] = 30,
+        ['Evo Blueberry III'] = 30,
+        ['Evo Pumpkin III'] = 30,
+        ['Evo Mushroom III'] = 30,
+        ['Carrot'] = 10,
+        ['Turnip'] = 10,
+        ['Parsley'] = 10,
+        ['Meyer Lemon'] = 10,
+        ['Carnival Pumpkin'] = 10,
+        ['Kniphofia'] = 10,
+        ['Golden Peach'] = 10,
+        ['Maple Resin'] = 10,
+        ['Moon Blossom'] = 10,
+        ['Bone Blossom'] = 10,
+        ['Moon Melon'] = 10,
+        ['Maple Apple'] = 10,
+        ['Moon Mango'] = 10,
+        ['Dragon Pepper'] = 10,
+        ['Elephant Ears'] = 10,
+        ['Fossilight'] = 10,
+        ['Princess Thorn'] = 10,
+        ['Coconut'] = 10,
+        ['Mushroom'] = 10,
+        ['Glowthorn'] = 10,
+        ['Pepper'] = 10,
+        ['Cacao'] = 10,
+        ['Apple'] = 10,
+        ['Wispwing'] = 10,
+        ['Romanesco'] = 10,
+        ['Elder Strawberry'] = 10,
+        ['Burning Bud'] = 10,
+        ['Giant Pinecone'] = 10,
+        ['Corn'] = 10,
+        ['Sugar Apple'] = 10,
+        ['Ember Lily'] = 10,
+        ['Dragon Fruit'] = 10,
+        ['Sunbulb'] = 10,
+        ['Orange Tulip'] = 10,
+        ['Mango'] = 10,
+        ['Cactus'] = 10,
+        ['Beanstalk'] = 10,
+        ['Lightshoot'] = 10,
+        ['Grape'] = 10,
+        ['Daffodil'] = 10,
+        ['Aurora Vine'] = 10,
+        ['Grand Tomato'] = 10,
+        ['Maple Apple'] = 10,
+        ['Princess Thorn'] = 10,
+        ['Spiked Mango'] = 10,
+        ['Pineapple'] = 10,
+        ['King Cabbage'] = 10,
+        ['Carnival Pumpkin'] = 10,
+        ['Kniphofia'] = 10,
+        ['Golden Peach'] = 10,
+        ['Maple Resin'] = 10,
     },
 
     -- Vòi phun (đặt theo thứ tự ưu tiên, mặc định đặt ở bên phải)
@@ -332,6 +332,7 @@ getgenv().Config = {
     EggsPlant = {
         { Name = 'Jungle Egg', Amount = 8 },
         { Name = 'Bug Egg', Amount = 2 },
+        { Name = 'Fall Egg', Amount = 1 },
     },
     PetNeedsPlant = { -- ví dụ: nếu Rooster < 9 thì ưu tiên Rare Egg
         ['Rooster<1'] = 'Rare Egg',
@@ -465,7 +466,6 @@ getgenv().Config = {
             'Levelup Lollipop',
         },
         Eggs = {
-			'Bee Egg',
             ['Common Egg'] = 5,
             ['Uncommon Egg'] = 10,
             'Rare Egg',
@@ -2462,81 +2462,5 @@ spawn(function()
                 end
             end
         end)
-    end
-end)
--- 🔧 Services
-local Players     = game:GetService("Players")
-local RS          = game:GetService("ReplicatedStorage")
-local localPlayer = Players.LocalPlayer
-
-local BuyNormal   = RS.GameEvents:WaitForChild("BuyTravelingMerchantShopStock")
-local BuyHoney    = RS.GameEvents:WaitForChild("HoneyMerchantSubmit_RE")
-
--- 📜 Danh sách item cố định
-local normalShopItems = {
-    "Liberty Lily","Firework Flower","Firework","Bald Eagle","July 4th Crate",
-
-    "Common Gnome Crate","Farmers Gnome Crate","Classic Gnome Crate",
-    "Iconic Gnome Crate","Gnome",
-
-    "Night Staff","Star Caller",
-    "Mutation Spray Cloudtouched","Mutation Spray Wet",
-    "Mutation Spray Windstruck","Mutation Spray Verdant",
-
-    "Tropical Mist Sprinkler","Berry Blusher Sprinkler",
-    "Spice Spritzer Sprinkler","Sweet Soaker Sprinkler",
-    "Flower Froster Sprinkler","Stalk Sprout Sprinkler",
-
-    "Cauliflower","Rafflesia","Green Apple","Avocado","Banana","Pineapple",
-    "Kiwi","Bell Pepper","Prickly Pear","Loquat","Feijoa","Pitcher Plant",
-
-    "Common Summer Egg","Rare Summer Egg","Paradise Egg",
-}
-
-local honeyShopItems = {
-    "Bee Egg",
-}
-
-local CHECK_DELAY = 5 -- giây
-
--- 📦 Đếm số lượng item trong balo
-local function countInBackpack(itemName)
-    local count = 0
-    for _, obj in ipairs(localPlayer.Backpack:GetChildren()) do
-        if string.find(obj.Name, itemName) then
-            count += 1
-        end
-    end
-    for _, obj in ipairs(localPlayer.Character:GetChildren()) do
-        if string.find(obj.Name, itemName) then
-            count += 1
-        end
-    end
-    return count
-end
-
--- 🛒 Mua item bằng tiền thường
-local function buyNormal(itemName)
-    local current = countInBackpack(itemName)
-    BuyNormal:FireServer(itemName)
-    print("💰 Mua "..itemName.." | hiện có: "..current)
-end
-
--- 🍯 Mua item bằng Honey
-local function buyHoney(itemName)
-    local current = countInBackpack(itemName)
-    BuyHoney:FireServer(itemName)
-    print("🍯 Mua "..itemName.." | hiện có: "..current)
-end
-
--- 🚀 Main loop
-task.spawn(function()
-    while task.wait(CHECK_DELAY) do
-        for _, item in ipairs(normalShopItems) do
-            buyNormal(item)
-        end
-        for _, item in ipairs(honeyShopItems) do
-            buyHoney(item)
-        end
     end
 end)
