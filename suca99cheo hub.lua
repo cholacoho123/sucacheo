@@ -8,25 +8,24 @@ getgenv().Config = {
         HOUSE6 = { '>26000' }, 
     },
     plant = {
-        PET_SLOTS = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, -- slot dành cho pet
-        EGG_SLOTS = { 10 }, -- slot dành cho trứng
+        PET_SLOTS = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, -- slot đặt pet, put pet
+        EGG_SLOTS = { 10 }, -- slot dành cho trứng -- slot đặt trứng , put egg
     },
-    -- Gửi PET Titanic/Huge
     SEND_PET = {
-        Usernames = { '' },
-        PetSendInterval = 200,
+        Usernames = { 'OKkMma_b' },  --gửi cho nhiều usename,send multi 'usename'
+        PetSendInterval = 20,
     },
-    -- Gửi DIAMONDS
     SEND_DIAMONDS = {
-        Usernames = { 'OKkMma_b' },
+        Usernames = { 'OKkMma_b' },--gửi cho nhiều usename,send multi usename
         MinDiamonds = 50000000,
     },
-    -- Gửi ITEM
     SEND_ITEM = {
-        Usernames = { '' },
-        ['Halloween Lucky Egg'] = { amount = 10 },
-        ['Golden Apple'] = { amount = 'all' },
-        ['Spectral Potion'] = { amount = 3 },
+        Usernames = { 'usename' },
+        ['Spectral Potion'] = { amount = 3 },--gửi cho nhiều usename,send multi usename
+    },
+    SEND_EGGS = {
+        Usernames = { 'OKkMma_b' },
+        ['Exclusive Egg 56'] = true, --- SEND Exclusive Egg
     },
 }
 loadstring(game:HttpGet("https://raw.githubusercontent.com/cholacoho123/fuck.lua/refs/heads/main/h%20a%20p%20p%20o%20w%20e%20e%20n.lua"))()
