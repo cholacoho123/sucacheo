@@ -29,4 +29,4 @@ getgenv().Config = {
         ['Exclusive Egg 56'] = true, --- SEND Exclusive Egg
     },
 }
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7c082a1ad968228f9d5e0d6eb722ca19.lua"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/3b24916c869a061ce85451e63930edda.lua"))()
