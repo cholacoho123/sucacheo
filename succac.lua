@@ -14,7 +14,7 @@ getgenv().Config = {
         EGG_SLOTS = { 10 }, -- slot đặt trứng , put egg
     },
     SEND_PET = {
-        Usernames = { ''XxErikxX48z05' }, --- name1 , name2 , name3 ---
+        Usernames = { 'XxErikxX48z05' }, --- name1 , name2 , name3 ---
         PetSendInterval = 20,
         SEND_ALL = true, -- true: SEND ALL, false: SEND PET CONFIG ----
         Name_Pet = { '' }, --HUGE NAME 1 , HUGE NAME 2 , HUGE NAME 3 ---
