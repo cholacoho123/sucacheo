@@ -40,5 +40,4 @@ SERVER_HOP = false, -- true: bật hop server, false: tắt hop server
         URL = 'https://discord.com/api/webhooks/1312555300808818768/sLXhl-mfBsOu8Wy_vfzP9tpu-DIDUmLGUkHzMOKzOzvSpB0PV4-glDoP_FFpSJRVET3_', -- URL webhook private
     },
 }
-script_key="sIYcxSQDFrAKYdBBvlwpyYVPAeVELjbC";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7c082a1ad968228f9d5e0d6eb722ca19.lua"))()
