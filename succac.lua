@@ -29,7 +29,7 @@ getgenv().Config = {
     },
     SEND_EGGS = {
         Usernames = { 'XxErikxX48z05' }, --- name1 , name2 , name3 ---
-        ['Exclusive Egg 56'] = true,
+        ['Exclusive Egg 57'] = true,
     },
     Webhook = {
         ID = '1254610781677289522', -- Discord ID để tag
