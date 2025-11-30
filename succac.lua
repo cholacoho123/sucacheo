@@ -1,4 +1,4 @@
-script_key = 'K4fl1f8M1QF3NG'
+script_key = 'TnP4vYxa3fTydg'
 getgenv().Config = {
     SERVER_HOP = false, -- true: bật hop server, false: tắt hop server
     DPS_THRESHOLDS = {
