@@ -1,40 +1,49 @@
-script_key = 'N78yrTtzhwzZhx'
-getgenv().Config = {
-    SERVER_HOP = false, -- true: bật hop server, false: tắt hop server
-    DPS_THRESHOLDS = {
-        HOUSE1 = { '>0' },
-        HOUSE2 = { '>1000' },
-        HOUSE3 = { '6000~14000', '>25000' },
-        HOUSE4 = { '14000~24000', '>35000' },
-        HOUSE5 = { '>24000' },
-        HOUSE6 = { '>30000' },
-    },
-    plant = {
-        PET_SLOTS = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, -- slot đặt pet, put pet
-        EGG_SLOTS = { 10 }, -- slot đặt trứng , put egg
-    },
-    SEND_PET = {
-        Usernames = { 'OKkMma_b' }, --- name1 , name2 , name3 ---
-        PetSendInterval = 20,
-        SEND_ALL = true, -- true: SEND ALL, false: SEND PET CONFIG ----
-        Name_Pet = { '' }, --HUGE NAME 1 , HUGE NAME 2 , HUGE NAME 3 ---
-    },
-    SEND_DIAMONDS = {
-        Usernames = { 'OKkMma_b' }, --- name1 , name2 , name3 ---
-        MinDiamonds = 100000000,
-    },
-    SEND_ITEM = {
-        Usernames = { 'OKkMma_b' }, --- name1 , name2 , name3 ---
-        ['Spectral Potion'] = { amount = 3 }, --- number and 'all' ----
-    },
-      SEND_EGGS = {
-    Usernames = { '' },
-    ALL = true, -- gửi tất cả egg có chữ Exclusive Egg
-    },
-    Webhook = {
-        ID = '', -- Discord ID để tag
-        IdNames = { 'Huge', 'Titanic' }, -- Pet cần theo dõi
-        URL = '', -- URL webhook private
-    },
-}
-loadstring(game:HttpGet('https://raw.githubusercontent.com/xitrumhub/sucacheo-hub/refs/heads/main/SUCACHEO%20HUB'))()
+--============= ANTI-AFK (Full Safe + Jump Simulation) =======================
+local Players = game:GetService('Players')
+local LocalPlayer = Players.LocalPlayer
+local VirtualUser = game:GetService('VirtualUser')
+local VirtualInputManager = game:GetService('VirtualInputManager')
+
+-- 🛡️ Chống AFK cơ bản bằng VirtualUser
+LocalPlayer.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+end)
+
+-- 🧠 Hàm tạo khoảng thời gian ngẫu nhiên (±30 giây)
+local function randomWait(base)
+    local variation = math.random(-30, 30)
+    return math.max(60, base + variation)
+end
+
+-- 🤸 Nhảy mô phỏng mỗi 5 phút ±30s
+task.spawn(function()
+    while task.wait(randomWait(300)) do
+        VirtualUser:CaptureController()
+        VirtualUser:SetKeyDown('0x20') -- phím Space
+        task.wait(0.5)
+        VirtualUser:SetKeyUp('0x20')
+    end
+end)
+
+-- 💨 Mô phỏng nhấn Space thực bằng VirtualInputManager (song song)
+function AFK()
+    while task.wait(randomWait(300)) do
+        VirtualInputManager:SendKeyEvent(true, 'Space', false, game)
+        task.wait(0.5)
+        VirtualInputManager:SendKeyEvent(false, 'Space', false, game)
+        print('[Anti-AFK] Jumped using VirtualInputManager.')
+    end
+end
+
+spawn(AFK)
+
+-- 🧩 Tắt Idle Tracking gốc của game
+pcall(function()
+    game.ReplicatedStorage.Network['Idle Tracking: Stop Timer']:FireServer()
+    local scripts = LocalPlayer.PlayerScripts.Scripts.Core
+    scripts['Idle Tracking'].Enabled = false
+    scripts['Server Closing'].Enabled = false
+end)
